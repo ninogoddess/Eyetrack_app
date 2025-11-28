@@ -1,0 +1,101 @@
+<!-- src/app/features/authentication/components/formulario-registro/formulario-registro.component.html -->
+<div class="max-w-md mx-auto p-8 border border-gray-200 rounded-lg shadow-md bg-white mt-10">
+  <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Registro de Usuario</h2>
+
+  <form [formGroup]="formularioRegistro" (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Campo Email -->
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        [ngClass]="{
+          'border-red-500': email?.invalid && (email?.dirty || email?.touched),
+          'border-green-500': email?.valid && (email?.dirty || email?.touched) && !cargando
+        }"
+        placeholder="ejemplo@dominio.com"
+      />
+      <div *ngIf="email?.pending" class="text-sm text-blue-600 mt-1">Verificando email...</div>
+      <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="mt-1 text-sm text-red-600">
+        <div *ngIf="email?.errors?.['required']">El email es obligatorio.</div>
+        <div *ngIf="email?.errors?.['email']">El formato del email no es válido.</div>
+        <div *ngIf="email?.errors?.['emailYaEnUso']">El email ya está en uso.</div>
+      </div>
+    </div>
+
+    <!-- Campo Contraseña -->
+    <div>
+      <label for="contrasena" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+      <input
+        id="contrasena"
+        type="password"
+        formControlName="contrasena"
+        class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        [ngClass]="{
+          'border-red-500': contrasena?.invalid && (contrasena?.dirty || contrasena?.touched),
+          'border-green-500': contrasena?.valid && (contrasena?.dirty || contrasena?.touched)
+        }"
+        placeholder="Mín. 8 caracteres, 1 mayús., 1 número"
+      />
+      <div *ngIf="contrasena?.invalid && (contrasena?.dirty || contrasena?.touched)" class="mt-1 text-sm text-red-600">
+        <div *ngIf="contrasena?.errors?.['required']">La contraseña es obligatoria.</div>
+        <div *ngIf="contrasena?.errors?.['sinMayuscula']">{{ contrasena?.errors?.['sinMayuscula'] }}</div>
+        <div *ngIf="contrasena?.errors?.['sinNumero']">{{ contrasena?.errors?.['sinNumero'] }}</div>
+        <div *ngIf="contrasena?.errors?.['minimoCaracteres']">{{ contrasena?.errors?.['minimoCaracteres'] }}</div>
+      </div>
+    </div>
+
+    <!-- Campo Confirmar Contraseña -->
+    <div>
+      <label for="confirmarContrasena" class="block text-sm font-medium text-gray-700 mb-1">Confirmar Contraseña</label>
+      <input
+        id="confirmarContrasena"
+        type="password"
+        formControlName="confirmarContrasena"
+        class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        [ngClass]="{
+          'border-red-500': confirmarContrasena?.invalid && (confirmarContrasena?.dirty || confirmarContrasena?.touched),
+          'border-green-500': confirmarContrasena?.valid && (confirmarContrasena?.dirty || confirmarContrasena?.touched)
+        }"
+      />
+      <div *ngIf="confirmarContrasena?.invalid && (confirmarContrasena?.dirty || confirmarContrasena?.touched)" class="mt-1 text-sm text-red-600">
+        <div *ngIf="confirmarContrasena?.errors?.['required']">Confirmar contraseña es obligatorio.</div>
+        <div *ngIf="confirmarContrasena?.errors?.['noCoinciden']">Las contraseñas no coinciden.</div>
+      </div>
+    </div>
+
+    <!-- Mensaje de Error General -->
+    <div *ngIf="mensajeError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+      <strong class="font-bold">Error:</strong>
+      <span class="block sm:inline ml-2">{{ mensajeError }}</span>
+    </div>
+
+    <!-- Mensaje de Registro Exitoso -->
+    <div *ngIf="registroExitoso" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+      <strong class="font-bold">¡Éxito!</strong>
+      <span class="block sm:inline ml-2">Tu cuenta ha sido creada. Redirigiendo...</span>
+    </div>
+
+    <!-- Botón de Registro -->
+    <button
+      type="submit"
+      [disabled]="formularioRegistro.invalid || cargando"
+      class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+      [ngClass]="{
+        'opacity-50 cursor-not-allowed': formularioRegistro.invalid || cargando,
+        'bg-blue-600': !(formularioRegistro.invalid || cargando)
+      }"
+    >
+      <span *ngIf="!cargando">Registrarme</span>
+      <span *ngIf="cargando">
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Registrando...
+      </span>
+    </button>
+  </form>
+</div>
